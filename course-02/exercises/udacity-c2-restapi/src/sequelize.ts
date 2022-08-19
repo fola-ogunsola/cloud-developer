@@ -3,7 +3,8 @@ import { config } from './config/config';
 
 
 const c = config.dev;
-
+console.log("hi")
+console.log(c.host)
 // Instantiate new Sequelize instance!
 export const sequelize = new Sequelize({
   "username": c.username,
@@ -11,7 +12,7 @@ export const sequelize = new Sequelize({
   "database": c.database,
   "host":     c.host,
 
-  dialect: 'postgres',
-  storage: ':memory:',
+  "dialect": 'postgres',
+  "storage": ':memory:',
 });
 
