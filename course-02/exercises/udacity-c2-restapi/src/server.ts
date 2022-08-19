@@ -1,6 +1,11 @@
 import express from 'express';
 import { sequelize } from './sequelize';
 
+import {Sequelize} from 'sequelize-typescript';
+
+
+require('dotenv').config();
+
 import { IndexRouter } from './controllers/v0/index.router';
 
 import bodyParser from 'body-parser';
@@ -10,6 +15,18 @@ import { V0MODELS } from './controllers/v0/model.index';
 (async () => {
   await sequelize.addModels(V0MODELS);
   await sequelize.sync();
+
+
+  // console.log('here2')
+  // await sequelize.sync({ alter: true });
+  
+  // .then(function (response) {
+  //   console.log(response, 'response')
+  // }).catch(function(error) {
+  //   console.log("error", error)
+  // });
+  console.log('here3')
+
 
   const app = express();
   const port = process.env.PORT || 8080; // default port to listen
@@ -33,6 +50,7 @@ import { V0MODELS } from './controllers/v0/model.index';
 
   // Start the Server
   app.listen( port, () => {
+      console.log(`test`)
       console.log( `server running http://localhost:${ port }` );
       console.log( `press CTRL+C to stop server` );
   } );
