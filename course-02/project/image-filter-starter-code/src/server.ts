@@ -33,7 +33,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get('/filteredimage', async ( req, res ) => {
+  app.get('/filteredimage', async (req:express.Request, res:express.Response) => {
     let url = req.query.image_url;
     console.log(url)
     if(!url){
