@@ -12,7 +12,7 @@ export const handler = middy(
     const todoId = event.pathParameters.todoId
     const userId = getUserId(event)
 
-    let presignedUrl = createAttachmentPresignedUrl(todoId, userId)
+    let presignedUrl = await createAttachmentPresignedUrl(todoId, userId)
 
     return {
       statusCode: 200,
