@@ -18,10 +18,10 @@ export class AttachmentUtils {
     }
   
     async generatePreSignedUrl(todoId, userId): Promise<String> {
-        
+        console.log('Generating Image presigned URL for ', todoId, userId)
         return s3.getSignedUrl('putObject', {
             Bucket: this.bucketName,
-            Key: `images/${todoId}/${userId}`,
+            Key: `images/${todoId}`,
             Expires: parseInt(this.urlExpiration)
         })
     }

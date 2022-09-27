@@ -8,9 +8,14 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
 
+custom:
+  webpack:
+    webpackConfig : ./webpack.config.js
+    includeModules: true
+
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   lambdaHashingVersion: '20201221'
 
   stage: ${opt:stage, 'dev'}
@@ -27,7 +32,7 @@ provider:
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
     ATTACHMENT_S3_BUCKET: serverless-fola-todo-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    TODOS_INDEX_NAME: todos_by_user
+    #TODOS_INDEX_NAME: todos_by_user
 
   logs:
     # Enable API Gateway logs
@@ -88,7 +93,7 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_INDEX_NAME}    
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX} 
       - Effect: "Allow"
         Action:
           - "xray:PutTraceSegments"
@@ -142,6 +147,13 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:Query
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
@@ -159,6 +171,7 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
+          - dynamodb:GetItem
           - dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
@@ -176,8 +189,12 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-        - s3:PutObject
-        - s3:GetObject
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
 resources:
